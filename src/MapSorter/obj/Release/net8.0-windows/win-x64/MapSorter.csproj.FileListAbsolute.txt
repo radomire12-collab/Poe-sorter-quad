@@ -1,0 +1,15 @@
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\MapSorter.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\MapSorter.AssemblyInfoInputs.cache
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\MapSorter.AssemblyInfo.cs
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\MapSorter.csproj.CoreCompileInputs.cache
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\bin\Release\net8.0-windows\win-x64\config.json
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\bin\Release\net8.0-windows\win-x64\MapSorter.exe
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\bin\Release\net8.0-windows\win-x64\MapSorter.deps.json
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\bin\Release\net8.0-windows\win-x64\MapSorter.runtimeconfig.json
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\bin\Release\net8.0-windows\win-x64\MapSorter.dll
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\bin\Release\net8.0-windows\win-x64\MapSorter.pdb
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\MapSorter.dll
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\refint\MapSorter.dll
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\MapSorter.pdb
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\MapSorter.genruntimeconfig.cache
+C:\Users\doychevrp\Desktop\poe-autosort\src\MapSorter\obj\Release\net8.0-windows\win-x64\ref\MapSorter.dll
