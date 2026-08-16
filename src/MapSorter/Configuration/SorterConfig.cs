@@ -45,7 +45,30 @@ public sealed class SorterConfig
                      ?? throw new InvalidOperationException("Unable to parse config.json");
 
         config.SourcePath = path;
+        config.NormalizeLegacyHotkeys();
         return config;
+    }
+
+    private void NormalizeLegacyHotkeys()
+    {
+        Hotkeys.TapStash = NormalizeHotkey(Hotkeys.TapStash, "NumPad8");
+        Hotkeys.TapQuadStash = NormalizeHotkey(Hotkeys.TapQuadStash, "NumPad9");
+    }
+
+    private static string NormalizeHotkey(string? value, string fallback)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return fallback;
+        }
+
+        var normalized = value.Trim();
+        if (normalized.Equals("F3", StringComparison.OrdinalIgnoreCase))
+        {
+            return fallback;
+        }
+
+        return normalized;
     }
 }
 
@@ -70,7 +93,10 @@ public sealed class HotkeyConfig
     public string TapInventory { get; set; } = "F4";
 
     [JsonPropertyName("tapStash")]
-    public string TapStash { get; set; } = "F3";
+    public string TapStash { get; set; } = "NumPad8";
+
+    [JsonPropertyName("tapQuadStash")]
+    public string TapQuadStash { get; set; } = "NumPad9";
 }
 
 public sealed class TimingConfig

@@ -15,6 +15,7 @@ public sealed class MapSorterEngine
     private readonly object _scannerLock = new();
     private int _stashCursor;
     private int _stash12x12Cursor;
+    private int _quadStashCursor;
     private int _lastTransferCount;
 
     public MapSorterEngine(SorterConfig config)
@@ -26,6 +27,7 @@ public sealed class MapSorterEngine
         _mouse = new MouseController();
         _stashCursor = 0;
         _stash12x12Cursor = 0;
+        _quadStashCursor = 0;
         _lastTransferCount = 0;
     }
 
@@ -38,6 +40,7 @@ public sealed class MapSorterEngine
             _stash12x12Navigator = new GridNavigator(_config.Stash12x12Grid);
             _stashCursor = 0;
             _stash12x12Cursor = 0;
+            _quadStashCursor = 0;
             _lastTransferCount = 0;
         }
     }
@@ -189,6 +192,58 @@ public sealed class MapSorterEngine
         }
     }
 
+    public void TapQuadStash(CancellationToken token)
+    {
+        lock (_scannerLock)
+        {
+            const int maxSlotsPerTrip = 60;
+            var totalSlots = _config.StashGrid.Rows * _config.StashGrid.Cols;
+
+            if (_stashCursor >= totalSlots)
+            {
+                Console.WriteLine("Quad stash already completed. Resetting cursor to start.");
+                _quadStashCursor = 0;
+            }
+
+            var allSlots = BuildColumnMajorSlots(_config.StashGrid);
+            var remainingSlots = totalSlots - _quadStashCursor;
+            var slotsToProcess = Math.Min(maxSlotsPerTrip, remainingSlots);
+
+            if (slotsToProcess == 0)
+            {
+                Console.WriteLine("No slots to process.");
+                return;
+            }
+
+            var slots = allSlots.Skip(_quadStashCursor).Take(slotsToProcess).ToList();
+            Console.WriteLine($"Ctrl+right-clicking {slots.Count} quad stash slots (24x24, top-to-bottom) starting from {_quadStashCursor + 1}/{totalSlots}â€¦");
+
+            foreach (var slot in slots)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                ClickSlotRight(slot, token);
+            }
+
+            if (slots.Count > 0)
+            {
+                _quadStashCursor += slots.Count;
+                if (_quadStashCursor >= totalSlots)
+                {
+                    Console.WriteLine($"Quad stash tap complete. All {totalSlots} slots processed. Cursor reset.");
+                    _quadStashCursor = 0;
+                }
+                else
+                {
+                    Console.WriteLine($"Quad stash tap complete. Processed {slots.Count} slots. Next start position: {_quadStashCursor + 1}/{totalSlots}");
+                }
+            }
+        }
+    }
+
     private void ClickSlotRight(Point position, CancellationToken token)
     {
         const int taps = 2;
@@ -256,5 +311,3 @@ public sealed class MapSorterEngine
         DelayHelper.SleepMilliseconds(_config.Timings.ClickDelayMs, token);
     }
 }
-
-

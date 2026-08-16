@@ -79,7 +79,7 @@ internal sealed class HotkeyApplicationContext : ApplicationContext
         foreach (var registration in registrations)
         {
             var parsed = HotkeyParser.Parse(registration.Combination);
-            yield return new RegisteredHotkey(id++, parsed.Modifiers, parsed.Key, registration.Callback);
+            yield return new RegisteredHotkey(id++, registration.Combination, parsed.Modifiers, parsed.Key, registration.Callback);
         }
     }
 
@@ -89,7 +89,8 @@ internal sealed class HotkeyApplicationContext : ApplicationContext
         {
             if (!NativeMethodsWrapper.RegisterHotKey(_window.Handle, hotkey.Id, hotkey.Modifiers, (uint)hotkey.Key))
             {
-                throw new InvalidOperationException($"Failed to register hotkey: {hotkey}");
+                var error = Marshal.GetLastWin32Error();
+                Console.WriteLine($"[!] Failed to register hotkey {hotkey.Combination} ({hotkey}). Win32Error={error}");
             }
         }
     }
@@ -124,13 +125,15 @@ internal sealed class HotkeyApplicationContext : ApplicationContext
 internal sealed class RegisteredHotkey
 {
     public int Id { get; }
+    public string Combination { get; }
     public uint Modifiers { get; }
     public Keys Key { get; }
     public Action Callback { get; }
 
-    public RegisteredHotkey(int id, uint modifiers, Keys key, Action callback)
+    public RegisteredHotkey(int id, string combination, uint modifiers, Keys key, Action callback)
     {
         Id = id;
+        Combination = combination;
         Modifiers = modifiers;
         Key = key;
         Callback = callback;

@@ -7,7 +7,8 @@
     "calibrateStash12x12": "Alt+NumPad8",
     "calibrateInventory": "Ctrl+NumPad9",
     "tapInventory": "F4",
-    "tapStash": "F3"
+    "tapStash": "NumPad8",
+    "tapQuadStash": "NumPad9"
   },
   "timings": {
     "clickDelayMs": 160,

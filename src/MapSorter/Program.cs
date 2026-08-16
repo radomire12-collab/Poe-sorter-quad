@@ -33,7 +33,8 @@ internal static class Program
                 new HotkeyRegistration(config.Hotkeys.CalibrateStash12x12, () => RunCalibration(() => _calibration?.CalibrateStash12x12(), "stash 12x12")),
                 new HotkeyRegistration(config.Hotkeys.CalibrateInventory, () => RunCalibration(() => _calibration?.CalibrateInventory(), "inventory")),
                 new HotkeyRegistration(config.Hotkeys.TapInventory, TriggerInventoryTap),
-                new HotkeyRegistration(config.Hotkeys.TapStash, TriggerStashTap)
+                new HotkeyRegistration(config.Hotkeys.TapStash, TriggerStashTap),
+                new HotkeyRegistration(config.Hotkeys.TapQuadStash, TriggerQuadStashTap)
             });
 
         PrintBanner(config);
@@ -58,7 +59,18 @@ internal static class Program
         Console.WriteLine($"Calibrate stash 12x12  : {config.Hotkeys.CalibrateStash12x12.ToUpperInvariant()}");
         Console.WriteLine($"Calibrate inventory    : {config.Hotkeys.CalibrateInventory.ToUpperInvariant()}");
         Console.WriteLine($"Right-click inventory  : {config.Hotkeys.TapInventory.ToUpperInvariant()}");
-        Console.WriteLine($"Right-click stash      : {config.Hotkeys.TapStash.ToUpperInvariant()}");
+        Console.WriteLine($"Right-click stash 12x12: {config.Hotkeys.TapStash.ToUpperInvariant()}");
+        Console.WriteLine($"Right-click stash 24x24: {config.Hotkeys.TapQuadStash.ToUpperInvariant()}");
+        Console.WriteLine();
+        Console.WriteLine("Hotkey actions:");
+        Console.WriteLine($"  {config.Hotkeys.Start.ToUpperInvariant()}  - Start sorting loop");
+        Console.WriteLine($"  {config.Hotkeys.Stop.ToUpperInvariant()}  - Stop everything");
+        Console.WriteLine($"  {config.Hotkeys.TapStash.ToUpperInvariant()}  - Take up to 60 items from normal stash 12x12, top to bottom");
+        Console.WriteLine($"  {config.Hotkeys.TapQuadStash.ToUpperInvariant()}  - Take up to 60 items from quad stash 24x24, top to bottom");
+        Console.WriteLine($"  {config.Hotkeys.TapInventory.ToUpperInvariant()}  - Right-click inventory slots");
+        Console.WriteLine($"  {config.Hotkeys.CalibrateStash.ToUpperInvariant()}  - Calibrate quad stash grid");
+        Console.WriteLine($"  {config.Hotkeys.CalibrateStash12x12.ToUpperInvariant()}  - Calibrate normal stash grid");
+        Console.WriteLine($"  {config.Hotkeys.CalibrateInventory.ToUpperInvariant()}  - Calibrate inventory grid");
         Console.WriteLine();
     }
 
@@ -171,6 +183,39 @@ internal static class Program
             catch (Exception ex)
             {
                 Console.WriteLine($"Stash tap failed: {ex.Message}");
+            }
+        }, _tapCts.Token);
+    }
+
+    private static void TriggerQuadStashTap()
+    {
+        if (_engine == null)
+        {
+            return;
+        }
+
+        if (_runner is { IsRunning: true })
+        {
+            Console.WriteLine("Stopping sorter before manual quad stash tapâ€¦");
+            _runner.Stop();
+        }
+
+        if (_tapTask is { IsCompleted: false })
+        {
+            Console.WriteLine("Quad stash tap already in progress.");
+            return;
+        }
+
+        _tapCts = new CancellationTokenSource();
+        _tapTask = Task.Run(() =>
+        {
+            try
+            {
+                _engine.TapQuadStash(_tapCts.Token);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Quad stash tap failed: {ex.Message}");
             }
         }, _tapCts.Token);
     }
