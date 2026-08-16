@@ -51,8 +51,8 @@ public sealed class SorterConfig
 
     private void NormalizeLegacyHotkeys()
     {
-        Hotkeys.TapStash = NormalizeHotkey(Hotkeys.TapStash, "NumPad8");
-        Hotkeys.TapQuadStash = NormalizeHotkey(Hotkeys.TapQuadStash, "NumPad9");
+        Hotkeys.TapStash = NormalizeHotkey(Hotkeys.TapStash, "[");
+        Hotkeys.TapQuadStash = NormalizeHotkey(Hotkeys.TapQuadStash, "]");
     }
 
     private static string NormalizeHotkey(string? value, string fallback)
@@ -63,9 +63,15 @@ public sealed class SorterConfig
         }
 
         var normalized = value.Trim();
-        if (normalized.Equals("F3", StringComparison.OrdinalIgnoreCase))
+        if (normalized.Equals("F3", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Equals("NumPad8", StringComparison.OrdinalIgnoreCase))
         {
             return fallback;
+        }
+
+        if (normalized.Equals("NumPad9", StringComparison.OrdinalIgnoreCase))
+        {
+            return fallback == "[" ? "[" : fallback;
         }
 
         return normalized;
@@ -93,10 +99,10 @@ public sealed class HotkeyConfig
     public string TapInventory { get; set; } = "F4";
 
     [JsonPropertyName("tapStash")]
-    public string TapStash { get; set; } = "NumPad8";
+    public string TapStash { get; set; } = "[";
 
     [JsonPropertyName("tapQuadStash")]
-    public string TapQuadStash { get; set; } = "NumPad9";
+    public string TapQuadStash { get; set; } = "]";
 }
 
 public sealed class TimingConfig

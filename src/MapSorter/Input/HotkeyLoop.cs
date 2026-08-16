@@ -184,6 +184,16 @@ internal static class HotkeyParser
 
     private static Keys ParseKey(string keyPart)
     {
+        if (keyPart == "[")
+        {
+            return Keys.Oem4;
+        }
+
+        if (keyPart == "]")
+        {
+            return Keys.Oem6;
+        }
+
         if (Enum.TryParse<Keys>(keyPart, true, out var parsed))
         {
             return parsed;
